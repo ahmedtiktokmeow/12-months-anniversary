@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║           ANNIVERSARY WEBSITE — CUSTOMIZATION GUIDE          ║
+  ║                                                              ║
+  ║  Search for these tags to find everything you can change:    ║
+  ║                                                              ║
+  ║  [HER_NAME]    — Replace with her name                       ║
+  ║  [YOUR_NAME]   — Replace with your name                      ║
+  ║  [DATE]        — Replace with your anniversary date          ║
+  ║  [PHOTO_URL]   — Replace with real image URLs or base64      ║
+  ║  [MEMORY]      — Replace month memories                      ║
+  ║  [REASON]      — Replace love reasons                        ║
+  ║  [LETTER]      — Replace letter content                      ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+<title>Ahmed & Lamoora — 365 Days</title>
+<style>
+  /* ========================
+     DESIGN TOKENS
+     ======================== */
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F0D080;
+    --gold-dim: #7A6030;
+    --cream: #F5EDD8;
+    --deep: #050508;
+    --mid: #0D0D18;
+    --surface: #12121F;
+    --surface2: #1A1A2E;
+    --text: #E8E0D0;
+    --text-dim: #8A8070;
+    --rose: #C0526A;
+    --rose-light: #E8708A;
+
+    --font-display: 'Georgia', 'Times New Roman', serif;
+    --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* ========================
+     RESET & BASE
+     ======================== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    background: var(--deep);
+    color: var(--text);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+  }
+
+  body {
+    background: var(--deep);
+    overflow-x: hidden;
+  }
+
+  /* ========================
+     LOADING SCREEN
+     ======================== */
+  #loading {
+    position: fixed;
+    inset: 0;
+    background: var(--deep);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: opacity 0.8s var(--ease-out);
+  }
+
+  #loading.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .loading-ring {
+    width: 56px;
+    height: 56px;
+    border: 1.5px solid var(--gold-dim);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 1.2s linear infinite;
+  }
+
+  .loading-text {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ========================
+     OPENING SCENE
+     ======================== */
+  #opening {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+    transition: opacity 1.2s var(--ease-cinematic);
+  }
+
+  #opening.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #star-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .opening-text {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    color: var(--cream);
+    letter-spacing: 0.05em;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 1.2s var(--ease-out), transform 1.2s var(--ease-out);
+    padding: 0 2rem;
+    max-width: 600px;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+  }
+
+  .opening-text.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .opening-text.dim {
+    opacity: 0.2;
+    transform: translateY(-8px);
+  }
+
+  #begin-btn {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 1s var(--ease-out), transform 1s var(--ease-out),
+                background 0.3s, color 0.3s, box-shadow 0.3s;
+    border-radius: 2px;
+  }
+
+  #begin-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #begin-btn:hover {
+    background: rgba(201,168,76,0.1);
+    box-shadow: 0 0 40px rgba(201,168,76,0.3), inset 0 0 20px rgba(201,168,76,0.05);
+    color: var(--gold-light);
+  }
+
+  /* ========================
+     MAIN SCROLL CONTAINER
+     ======================== */
+  #main {
+    opacity: 0;
+    transition: opacity 1.5s var(--ease-out);
+  }
+
+  #main.visible { opacity: 1; }
+
+  /* ========================
+     SECTION BASE
+     ======================== */
+  .scene {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* ========================
+     SCENE 1: NUMBERS
+     ======================== */
+  #scene-numbers {
+    background: var(--deep);
+    flex-direction: column;
+    gap: 0;
+  }
+
+  #numbers-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.4;
+  }
+
+  .number-sequence {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .big-number {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 18vw, 14rem);
+    font-weight: 400;
+    line-height: 0.9;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--gold-dim);
+    opacity: 0;
+    transform: scale(0.85) translateY(30px);
+    transition: all 1.2s var(--ease-cinematic);
+    letter-spacing: -0.03em;
+  }
+
+  .big-number.visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    -webkit-text-stroke: 1px var(--gold);
+    text-shadow: 0 0 80px rgba(201,168,76,0.2);
+  }
+
+  .number-label {
+    font-family: var(--font-body);
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-top: 0.5rem;
+    opacity: 0;
+    transition: opacity 1s var(--ease-out) 0.4s;
+  }
+
+  .big-number.visible + .number-label { opacity: 1; }
+
+  .number-block {
+    margin: 1.5rem 0;
+  }
+
+  .numbers-closing {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 3vw, 1.6rem);
+    color: var(--cream);
+    font-style: italic;
+    margin-top: 3rem;
+    opacity: 0;
+    transition: opacity 1.5s var(--ease-out);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .numbers-closing.visible { opacity: 1; }
+
+  /* ========================
+     SCENE 2: TIMELINE
+     ======================== */
+  #scene-timeline {
+    background: var(--deep);
+    min-height: auto;
+    padding: 6rem 0;
+    display: block;
+  }
+
+  .timeline-header {
+    text-align: center;
+    padding: 0 2rem 5rem;
+  }
+
+  .section-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 400;
+    color: var(--cream);
+    line-height: 1.15;
+  }
+
+  .timeline-track {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom,
+      transparent 0%, var(--gold-dim) 10%,
+      var(--gold-dim) 90%, transparent 100%);
+    transform: translateX(-50%);
+  }
+
+  @media (max-width: 640px) {
+    .timeline-line { left: 2rem; }
+  }
+
+  .timeline-entry {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 5rem;
+    align-items: flex-start;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+  }
+
+  .timeline-entry.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .timeline-entry:nth-child(odd) { flex-direction: row; }
+  .timeline-entry:nth-child(even) { flex-direction: row-reverse; }
+
+  @media (max-width: 640px) {
+    .timeline-entry,
+    .timeline-entry:nth-child(even) {
+      flex-direction: column;
+      padding-left: 3.5rem;
+    }
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-top: 1.5rem;
+    box-shadow: 0 0 16px rgba(201,168,76,0.6);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 640px) {
+    .timeline-dot { left: 2rem; }
+  }
+
+  .timeline-content {
+    flex: 1;
+    max-width: calc(50% - 2rem);
+  }
+
+  @media (max-width: 640px) {
+    .timeline-content { max-width: 100%; }
+  }
+
+  .timeline-month {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+
+  /* [PHOTO_URL] — Replace these placeholder divs with actual <img> tags
+     e.g. <img src="your-photo-url.jpg" alt="Memory" class="timeline-photo">
+     or use base64: <img src="data:image/jpeg;base64,..." alt="Memory">  */
+  .timeline-photo {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: var(--surface);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 4px;
+    margin-bottom: 1.2rem;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .timeline-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .photo-placeholder-text {
+    font-size: 0.7rem;
+    color: var(--gold-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 1rem;
+    /* Remove this span when you add real photos */
+  }
+
+  .timeline-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+      rgba(201,168,76,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .timeline-memory-title {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .timeline-memory-text {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+
+  /* ========================
+     SCENE 3: LOVE REASONS
+     ======================== */
+  #scene-reasons {
+    background: radial-gradient(ellipse at center, var(--surface2) 0%, var(--deep) 70%);
+    flex-direction: column;
+    padding: 6rem 2rem;
+    min-height: auto;
+    display: block;
+  }
+
+  .reasons-header {
+    text-align: center;
+    padding-bottom: 4rem;
+  }
+
+  .reasons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .reason-card {
+    background: var(--surface);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 8px;
+    padding: 2rem 1.5rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s var(--ease-out), border-color 0.4s,
+                box-shadow 0.4s;
+    opacity: 0;
+    transform: translateY(30px) scale(0.96);
+  }
+
+  .reason-card.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .reason-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    border-color: rgba(201,168,76,0.4);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px rgba(201,168,76,0.08);
+  }
+
+  .reason-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .reason-card:hover::before { opacity: 1; }
+
+  .reason-number {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    color: rgba(201,168,76,0.12);
+    line-height: 1;
+    margin-bottom: 1rem;
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+  }
+
+  .reason-front {
+    position: relative;
+    z-index: 1;
+  }
+
+  .reason-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+
+  .reason-hint {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--cream);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .reason-reveal {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--surface2), var(--surface));
+    border-radius: 8px;
+    padding: 2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.92);
+    transition: all 0.5s var(--ease-out);
+    pointer-events: none;
+  }
+
+  .reason-card.flipped .reason-reveal {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+
+  .reason-card.flipped .reason-front {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.3s var(--ease-out);
+  }
+
+  .reason-text {
+    font-family: var(--font-display);
+    font-size: clamp(0.9rem, 2vw, 1.05rem);
+    color: var(--cream);
+    text-align: center;
+    line-height: 1.65;
+    font-style: italic;
+  }
+
+  .reason-text::before {
+    content: '"';
+    display: block;
+    font-size: 3rem;
+    color: var(--gold-dim);
+    line-height: 0.5;
+    margin-bottom: 1rem;
+  }
+
+  /* ========================
+     SCENE 4: LOVE LETTER
+     ======================== */
+  #scene-letter {
+    background: var(--deep);
+    flex-direction: column;
+    padding: 6rem 2rem;
+  }
+
+  .letter-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .envelope-wrap {
+    position: relative;
+    cursor: pointer;
+    perspective: 1000px;
+  }
+
+  .envelope {
+    width: clamp(240px, 70vw, 420px);
+    position: relative;
+    transition: transform 0.6s var(--ease-out);
+    transform-style: preserve-3d;
+  }
+
+  .envelope:hover { transform: translateY(-6px) scale(1.02); }
+
+  .envelope-body {
+    width: 100%;
+    aspect-ratio: 1.618/1;
+    background: linear-gradient(145deg, #1C1C2E, #141422);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 4px;
+    position: relative;
+    overflow: visible;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.06);
+  }
+
+  .envelope-body::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(135deg,
+      transparent 49.5%, rgba(201,168,76,0.08) 49.5%,
+      rgba(201,168,76,0.08) 50.5%, transparent 50.5%),
+    linear-gradient(225deg,
+      transparent 49.5%, rgba(201,168,76,0.08) 49.5%,
+      rgba(201,168,76,0.08) 50.5%, transparent 50.5%);
+    pointer-events: none;
+  }
+
+  .envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(175deg, #1C1C30, #141428);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    transform-origin: top center;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transition: transform 0.8s var(--ease-cinematic);
+    z-index: 2;
+  }
+
+  .envelope-wrap.opened .envelope-flap {
+    transform: rotateX(180deg);
+  }
+
+  .envelope-seal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    background: var(--mid);
+    transition: opacity 0.4s;
+    font-size: 1.2rem;
+    box-shadow: 0 0 20px rgba(201,168,76,0.2);
+  }
+
+  .envelope-wrap.opened .envelope-seal { opacity: 0; pointer-events: none; }
+
+  .envelope-instruction {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+
+  /* Letter content */
+  .letter-content {
+    max-width: 560px;
+    width: 90vw;
+    background: linear-gradient(160deg, #1A1A2E, #0F0F1E);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 4px;
+    padding: clamp(1.5rem, 5vw, 3rem);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scaleY(0);
+    transform-origin: top center;
+    opacity: 0;
+    transition: transform 0.9s var(--ease-cinematic) 0.5s,
+                opacity 0.6s var(--ease-out) 0.5s;
+    pointer-events: none;
+    z-index: 10;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+  }
+
+  .envelope-wrap.opened .letter-content {
+    transform: translate(-50%, -50%) scaleY(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .letter-date {
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    /* [DATE] — Change this date */
+  }
+
+  .letter-salutation {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    color: var(--cream);
+    font-style: italic;
+    margin-bottom: 1.2rem;
+  }
+
+  .letter-body {
+    font-size: clamp(0.88rem, 2vw, 0.95rem);
+    line-height: 1.85;
+    color: var(--text-dim);
+  }
+
+  .letter-body p { margin-bottom: 1rem; }
+
+  .letter-signature {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    color: var(--cream);
+    font-style: italic;
+    margin-top: 1.5rem;
+    /* [YOUR_NAME] — Change signature */
+  }
+
+  .typewriter-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--gold);
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ========================
+     SCENE 5: SURPRISE
+     ======================== */
+  #scene-surprise {
+    background: var(--deep);
+    flex-direction: column;
+    gap: 2rem;
+    min-height: 60vh;
+  }
+
+  #surprise-btn {
+    background: transparent;
+    border: 1px solid rgba(192,82,106,0.4);
+    color: var(--rose-light);
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    font-style: italic;
+    padding: 1.2rem 2.5rem;
+    cursor: pointer;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+    transition: all 0.4s var(--ease-out);
+    position: relative;
+    z-index: 1;
+  }
+
+  #surprise-btn:hover {
+    border-color: var(--rose);
+    box-shadow: 0 0 40px rgba(192,82,106,0.25);
+    background: rgba(192,82,106,0.06);
+  }
+
+  #hearts-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #surprise-message {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 4vw, 2.2rem);
+    color: var(--cream);
+    text-align: center;
+    font-style: italic;
+    padding: 0 2rem;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    transition: all 1.2s var(--ease-out);
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+  }
+
+  #surprise-message.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* ========================
+     SCENE 6: FUTURE
+     ======================== */
+  #scene-future {
+    background: radial-gradient(ellipse at 50% 60%, #0A0A20 0%, var(--deep) 70%);
+    flex-direction: column;
+    padding: 6rem 2rem;
+  }
+
+  #constellation-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+  }
+
+  .future-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 640px;
+  }
+
+  .future-quote {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 4vw, 2.2rem);
+    color: var(--cream);
+    line-height: 1.55;
+    font-style: italic;
+    font-weight: 400;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1.4s var(--ease-out);
+  }
+
+  .future-quote.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .future-divider {
+    width: 60px;
+    height: 1px;
+    background: var(--gold-dim);
+    margin: 2.5rem auto;
+    opacity: 0;
+    transition: opacity 1s var(--ease-out) 0.5s;
+  }
+
+  .future-divider.visible { opacity: 1; }
+
+  .future-sub {
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    color: var(--text-dim);
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+    opacity: 0;
+    transition: opacity 1.2s var(--ease-out) 0.8s;
+  }
+
+  .future-sub.visible { opacity: 1; }
+
+  /* ========================
+     GRAND FINALE
+     ======================== */
+  #scene-finale {
+    background: var(--deep);
+    flex-direction: column;
+    gap: 0;
+    padding: 6rem 2rem 8rem;
+    min-height: 100vh;
+  }
+
+  #finale-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .finale-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 540px;
+  }
+
+  .finale-line {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 3vw, 1.35rem);
+    color: var(--cream);
+    line-height: 1.9;
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.8s var(--ease-out);
+    min-height: 2em;
+  }
+
+  .finale-line.visible { opacity: 1; }
+
+  .finale-closing {
+    margin-top: 3.5rem;
+    opacity: 0;
+    transition: opacity 1.5s var(--ease-out);
+  }
+
+  .finale-closing.visible { opacity: 1; }
+
+  .finale-closing-line1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .finale-closing-line2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 5vw, 2.6rem);
+    color: var(--cream);
+    font-style: italic;
+    display: block;
+  }
+
+  .finale-heart {
+    margin-top: 3rem;
+    opacity: 0;
+    transition: opacity 2s var(--ease-out);
+    animation: heartbeat 2.2s ease-in-out infinite;
+  }
+
+  .finale-heart.visible { opacity: 1; }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.12); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.07); }
+    56% { transform: scale(1); }
+  }
+
+  .heart-svg {
+    width: clamp(60px, 12vw, 90px);
+    filter: drop-shadow(0 0 24px rgba(192,82,106,0.7))
+            drop-shadow(0 0 60px rgba(192,82,106,0.3));
+  }
+
+  /* ========================
+     UTILITY
+     ======================== */
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+  }
+
+  .reveal-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .gold-accent { color: var(--gold); }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     LOADING SCREEN
+     ════════════════════════════════════ -->
+<div id="loading">
+  <div class="loading-ring"></div>
+  <span class="loading-text">A moment…</span>
+</div>
+
+<!-- ════════════════════════════════════
+     OPENING SCENE (fixed overlay)
+     ════════════════════════════════════ -->
+<div id="opening">
+  <canvas id="star-canvas"></canvas>
+
+  <p class="opening-text" id="open-line1">Before you continue…</p>
+
+  <p class="opening-text" id="open-line2">
+    Lamoora — I want to show you what the last 365 days have meant to me.
+  </p>
+
+  <button id="begin-btn">Begin the Journey</button>
+</div>
+
+<!-- ════════════════════════════════════
+     MAIN CONTENT (scrollable)
+     ════════════════════════════════════ -->
+<div id="main">
+
+  <!-- ─── SCENE 1: NUMBERS ─── -->
+  <section id="scene-numbers" class="scene">
+    <canvas id="numbers-canvas"></canvas>
+
+    <div class="number-sequence">
+
+      <div class="number-block">
+        <div class="big-number" id="n-365">365</div>
+        <div class="number-label">days</div>
+      </div>
+
+      <div class="number-block">
+        <div class="big-number" id="n-12">12</div>
+        <div class="number-label">months</div>
+      </div>
+
+      <div class="number-block">
+        <div class="big-number" id="n-52">52</div>
+        <div class="number-label">weeks</div>
+      </div>
+
+      <div class="number-block">
+        <div class="big-number" id="n-8760">8,760</div>
+        <div class="number-label">hours</div>
+      </div>
+
+      <p class="numbers-closing" id="numbers-closing">
+        And somehow, it still doesn't feel long enough.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── SCENE 2: MEMORY TIMELINE ─── -->
+  <section id="scene-timeline">
+
+    <div class="timeline-header reveal-on-scroll">
+      <p class="section-eyebrow">Our year</p>
+      <h2 class="section-title">Twelve months<br>of everything</h2>
+    </div>
+
+    <div class="timeline-track">
+      <div class="timeline-line"></div>
+
+      <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           MONTHS — [MEMORY] Replace each block
+           To add a real photo:
+             <div class="timeline-photo">
+               <img src="YOUR_PHOTO_URL" alt="Month Name">
+             </div>
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+      <!-- Month 1 -->
+      <div class="timeline-entry" id="te-1">
+        <div class="timeline-dot" style="position: relative; z-index: 2;"></div>
+        <div class="timeline-content">
+          <p class="timeline-month">Month One</p>
+          <div class="timeline-photo">
+          <img src="photo1.jpg" alt="Month 1">
+          </div>
+          <!-- [MEMORY] Change title and text -->
+          <h3 class="timeline-memory-title">The beginning of everything</h3>
+          <p class="timeline-memory-text">
+            When I think back to where this all started, I still can't believe how lucky I was that our paths crossed. This month changed everything.
+          </p>
+        </div>
+        <div class="timeline-content" style="visibility:hidden; pointer-events:none;"></div>
+      </div>
+
+      <!-- Month 2 -->
+      <div class="timeline-entry" id="te-2">
+        <div class="timeline-dot" style="position: relative; z-index: 2;"></div>
+        <div class="timeline-content" style="visibility:hidden; pointer-events:none;"></div>
+        <div class="timeline-content">
+          <p class="timeline-month">Month Two</p>
+          <div class="timeline-photo">
+          <img src="photo2jpg" alt="Month 2">
+          </div>
+          <h3 class="timeline-memory-title">Learning each other</h3>
+          <p class="timeline-memory-text">
+            Every conversation felt like discovering a new room in a house I somehow already knew by heart. I started looking forward to every moment.
+          </p>
+        </div>
+      </div>
+
+      <!-- Month 3 -->
+      <div class="timeline-entry" id="te-3">
+        <div class="timeline-dot" style="position: relative; z-index: 2;"></div>
+        <div class="timeline-content">
+          <p class="timeline-month">Month Three</p>
+          <div class="timeline-photo">
+  <img src="photo3.jpg" alt="Month 3">
+</div>
+          <h3 class="timeline-memory-title">Something unmistakeable</h3>
+          <p class="timeline-memory-text">
+            I remember the exact moment I realized this was real. Not a feeling that would fade — something that was only going to grow.
+          </p>
+        </div>
+        <div class="timeline-content" style="visibility:hidden; pointer-events:none;"></div>
+      </div>
+
+      <!-- Month 4 -->
+      <div class="timeline-entry" id="te-4">
+        <div class="timeline-dot" style="position: relative; z-index: 2;"></div>
+        <div class="timeline-content" style="visibility:hidden; pointer-events:none;"></div>
+        <div class="timeline-content">
+          <p class="timeline-month">Month Four</p>
+          <div class="timeline-photo">
+  <img src="photo4.jpg" alt="Month 4">
+</div>
+          <h3 class="timeline-memory-title">A day I want back</h3>
+          <p class="timeline-memory-text">
+            Some days are so good you want to fold them up and keep them. This was one of them. I keep returning to it.
+          </p>
+        </div>
+      </div>
+
+      <!-- Month 5 -->
+      <div class="timeline-entry" id="te-5">
+        <div class="timeline-dot" style="position: relative; z-index: 2;"></div>
+        <div class="timeline-content">
+          <p class="timeline-month">Month Five</p>
+          <div class="timeline-photo">
+  <img src="photo5.jpg" alt="Month 5">
+</div>
+          <h3 class="timeline-memory-title">Ordinary magic</h3>
+          <p class="timeline-memory-text">
+            The best parts weren't grand gestures — they were the quiet ones. A look across a room. A shared laugh. The weight of your hand in mine.
+          </p>
+        </div>
+        <div class="timeline-content" style="visibility:hidden; pointer-events:none;"></div>
+      </div>
+
+      <!-- Month 6 -->
+      <div class="timeline-entry" id="te-6">
+        <div class="timeline-dot" style="position: relative; z-index: 2;"></div>
+        <div class="timeline-content" style="visibility:hidden; pointer-events:none;"></div>
+        <div class="timeline-content">
+          <p class="timeline-month">Month Six</p>
+          <div class="timeline-photo">
+  <img src="photo6.jpg" alt="Month 6">
+</div>
+          <h3 class="timeline-memory-title">Halfway there</h3>
+          <p class="timeline-memory-text">
+            Six months in and I was still finding new reasons to smile. You have this way of making everything brighter without even trying.
+          </p>
+        </div>
+      </div>
+
+      <!-- Month 7 -->
+      <div class="timeline-entry" id="te-7">
+        <div class="timeline-dot" style="position: relative; z-index: 2;"></div>
+        <div class="timeline-content">
+          <p class="timeline-month">Month Seven</p>
+          <div class="timeline-photo">
+  <img src="photo7.jpg" alt="Month 7">
+</div>
+          <h3 class="timeline-memory-title">Through everything</h3>
+          <p class="timeline-memory-text">
+            Not every month is easy, and that's okay. What matters is who is beside you. I'd choose you through any of it.
+          </p>
+        </div>
+        <div class="timeline-content" style="visibility:hidden; pointer-events:none;"></div>
+      </div>
+
+      <!-- Month 8 -->
+      <div class="timeline-entry" id="te-8">
+        <div class="timeline-dot" style="position: relative; z-index: 2;"></div>
+        <div class="timeline-content" style="visibility:hidden; pointer-events:none;"></div>
+        <div class="timeline-content">
+          <p class="timeline-month">Month Eight</p>
+          <div class="timeline-photo">
+  <img src="photo8.jpg" alt="Month 8">
+</div>
+          <h3 class="timeline-memory-title">A favourite memory</h3>
+          <p class="timeline-memory-text">
+            If I could live in a single day from this year on repeat, this month would be where I'd set the clock.
+          </p>
+        </div>
+      </div>
+
+      <!-- Month 9 -->
+      <div class="timeline-entry" id="te-9">
+        <div class="timeline-dot" style="position: relative; z-index: 2;"></div>
+        <div class="timeline-content">
+          <p class="timeline-month">Month Nine</p>
+          <div class="timeline-photo">
+  <img src="photo9.jpg" alt="Month 9">
+</div>
+          <h3 class="timeline-memory-title">I noticed everything</h3>
+          <p class="timeline-memory-text">
+            The way you laugh at your own jokes. The way you care. The way you exist in this world. I noticed all of it, and I was grateful for all of it.
+          </p>
+        </div>
+        <div class="timeline-content" style="visibility:hidden; pointer-events:none;"></div>
+      </div>
+
+      <!-- Month 10 -->
+      <div class="timeline-entry" id="te-10">
+        <div class="timeline-dot" style="position: relative; z-index: 2;"></div>
+        <div class="timeline-content" style="visibility:hidden; pointer-events:none;"></div>
+        <div class="timeline-content">
+          <p class="timeline-month">Month Ten</p>
+          <div class="timeline-photo">
+ <img src="photo10.jpg" alt="Month 10">
+ </div>
+          <h3 class="timeline-memory-title">How far we've come</h3>
+          <p class="timeline-memory-text">
+            Ten months in and I still catch myself looking at you the same way I did at the very start. Some things don't change. They just deepen.
+          </p>
+        </div>
+      </div>
+
+      <!-- Month 11 -->
+      <div class="timeline-entry" id="te-11">
+        <div class="timeline-dot" style="position: relative; z-index: 2;"></div>
+        <div class="timeline-content">
+          <p class="timeline-month">Month Eleven</p>
+          <div class="timeline-photo"> 
+<img src="photo11.jpg" alt="Month 11">
+</div>
+          <h3 class="timeline-memory-title">Before the end of the year</h3>
+          <p class="timeline-memory-text">
+            Almost a full trip around the sun. I started thinking about what it meant — and I realized I didn't want to imagine any of it without you.
+          </p>
+        </div>
+        <div class="timeline-content" style="visibility:hidden; pointer-events:none;"></div>
+      </div>
+
+      <!-- Month 12 -->
+      <div class="timeline-entry" id="te-12">
+        <div class="timeline-dot" style="position: relative; z-index: 2;"></div>
+        <div class="timeline-content" style="visibility:hidden; pointer-events:none;"></div>
+        <div class="timeline-content">
+          <p class="timeline-month">Month Twelve</p>
+          <div class="timeline-photo">
+<img src="photo12.jpg" alt="Month 12">
+</div>
+          <h3 class="timeline-memory-title">Here we are</h3>
+          <p class="timeline-memory-text">
+            365 days. And I am still the luckiest person in any room you walk into.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── SCENE 3: LOVE REASONS ─── -->
+  <section id="scene-reasons">
+    <div class="reasons-header reveal-on-scroll">
+      <p class="section-eyebrow">What I know for certain</p>
+      <h2 class="section-title">12 reasons</h2>
+    </div>
+
+    <div class="reasons-grid">
+      <!-- [REASON] Click each card to reveal. Change hint + text for each. -->
+
+      <div class="reason-card" onclick="this.classList.toggle('flipped')">
+        <span class="reason-number">01</span>
+        <div class="reason-front">
+          <p class="reason-label">Tap to reveal</p>
+          <p class="reason-hint">The way you make me feel seen</p>
+        </div>
+        <div class="reason-reveal">
+          <p class="reason-text">You listen like what I'm saying actually matters — and somehow, when you're listening, it does.</p>
+        </div>
+      </div>
+
+      <div class="reason-card" onclick="this.classList.toggle('flipped')">
+        <span class="reason-number">02</span>
+        <div class="reason-front">
+          <p class="reason-label">Tap to reveal</p>
+          <p class="reason-hint">Your laugh</p>
+        </div>
+        <div class="reason-reveal">
+          <p class="reason-text">Your laugh is the best sound I know. I catch myself doing things just to hear it.</p>
+        </div>
+      </div>
+
+      <div class="reason-card" onclick="this.classList.toggle('flipped')">
+        <span class="reason-number">03</span>
+        <div class="reason-front">
+          <p class="reason-label">Tap to reveal</p>
+          <p class="reason-hint">How deeply you care</p>
+        </div>
+        <div class="reason-reveal">
+          <p class="reason-text">The way you care about the people and things you love is one of the most beautiful things about you.</p>
+        </div>
+      </div>
+
+      <div class="reason-card" onclick="this.classList.toggle('flipped')">
+        <span class="reason-number">04</span>
+        <div class="reason-front">
+          <p class="reason-label">Tap to reveal</p>
+          <p class="reason-hint">Your strength</p>
+        </div>
+        <div class="reason-reveal">
+          <p class="reason-text">You carry things gracefully that most people would never know how to hold. That strength is breathtaking.</p>
+        </div>
+      </div>
+
+      <div class="reason-card" onclick="this.classList.toggle('flipped')">
+        <span class="reason-number">05</span>
+        <div class="reason-front">
+          <p class="reason-label">Tap to reveal</p>
+          <p class="reason-hint">The small things you do</p>
+        </div>
+        <div class="reason-reveal">
+          <p class="reason-text">The small kindnesses — the ones you don't even think about — say more about who you are than anything else.</p>
+        </div>
+      </div>
+
+      <div class="reason-card" onclick="this.classList.toggle('flipped')">
+        <span class="reason-number">06</span>
+        <div class="reason-front">
+          <p class="reason-label">Tap to reveal</p>
+          <p class="reason-hint">How you see the world</p>
+        </div>
+        <div class="reason-reveal">
+          <p class="reason-text">You notice beauty in places I'd have walked past. Being with you changed how I see everything.</p>
+        </div>
+      </div>
+
+      <div class="reason-card" onclick="this.classList.toggle('flipped')">
+        <span class="reason-number">07</span>
+        <div class="reason-front">
+          <p class="reason-label">Tap to reveal</p>
+          <p class="reason-hint">Your honesty</p>
+        </div>
+        <div class="reason-reveal">
+          <p class="reason-text">You say what you mean. In a world that rarely does, that is rare and I treasure it.</p>
+        </div>
+      </div>
+
+      <div class="reason-card" onclick="this.classList.toggle('flipped')">
+        <span class="reason-number">08</span>
+        <div class="reason-front">
+          <p class="reason-label">Tap to reveal</p>
+          <p class="reason-hint">Who you make me</p>
+        </div>
+        <div class="reason-reveal">
+          <p class="reason-text">I am genuinely a better person for knowing you. That's not something I say lightly.</p>
+        </div>
+      </div>
+
+      <div class="reason-card" onclick="this.classList.toggle('flipped')">
+        <span class="reason-number">09</span>
+        <div class="reason-front">
+          <p class="reason-label">Tap to reveal</p>
+          <p class="reason-hint">Your mind</p>
+        </div>
+        <div class="reason-reveal">
+          <p class="reason-text">Talking to you is one of my favourite things. You surprise me constantly — and I hope you never stop.</p>
+        </div>
+      </div>
+
+      <div class="reason-card" onclick="this.classList.toggle('flipped')">
+        <span class="reason-number">10</span>
+        <div class="reason-front">
+          <p class="reason-label">Tap to reveal</p>
+          <p class="reason-hint">The comfort of you</p>
+        </div>
+        <div class="reason-reveal">
+          <p class="reason-text">There is nowhere I feel more at ease than next to you. You are where I feel at home.</p>
+        </div>
+      </div>
+
+      <div class="reason-card" onclick="this.classList.toggle('flipped')">
+        <span class="reason-number">11</span>
+        <div class="reason-front">
+          <p class="reason-label">Tap to reveal</p>
+          <p class="reason-hint">Your spirit</p>
+        </div>
+        <div class="reason-reveal">
+          <p class="reason-text">There is something about the way you move through life — with such intention and warmth — that I find endlessly admirable.</p>
+        </div>
+      </div>
+
+      <div class="reason-card" onclick="this.classList.toggle('flipped')">
+        <span class="reason-number">12</span>
+        <div class="reason-front">
+          <p class="reason-label">Tap to reveal</p>
+          <p class="reason-hint">Simply: you</p>
+        </div>
+        <div class="reason-reveal">
+          <p class="reason-text">Every single part of you — the whole, beautiful, complicated, wonderful you. That is what I love.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── SCENE 4: LOVE LETTER ─── -->
+  <section id="scene-letter" class="scene">
+    <div class="letter-header reveal-on-scroll">
+      <p class="section-eyebrow">I wrote you something</p>
+      <h2 class="section-title">A letter</h2>
+    </div>
+
+    <div class="envelope-wrap" id="envelope-wrap">
+      <div class="envelope">
+        <div class="envelope-body">
+          <div class="envelope-flap"></div>
+          <div class="envelope-seal">✦</div>
+        </div>
+      </div>
+      <p class="envelope-instruction" id="env-instruction">Click to open</p>
+
+      <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           [LETTER] — Edit the letter content below
+           [DATE]   — Change the date at the top
+           [HER_NAME] — Change the salutation
+           [YOUR_NAME] — Change the signature
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+      <div class="letter-content" id="letter-content">
+        <p class="letter-date">15th June 2026 — One Year</p><!-- [DATE] -->
+        <p class="letter-salutation" id="letter-salutation">My Lamoora,</p><!-- [HER_NAME] -->
+        <div class="letter-body" id="letter-body-text">
+          <!-- Typewriter text goes here via JS -->
+        </div>
+        <p class="letter-signature">Yours always, Ahmed.</p><!-- [YOUR_NAME] -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SCENE 5: SURPRISE ─── -->
+  <section id="scene-surprise" class="scene">
+    <canvas id="hearts-canvas"></canvas>
+    <button id="surprise-btn">Do you know how much I love you?</button>
+    <p id="surprise-message">More than all the stars you can see tonight, Lamoora.</p>
+  </section>
+
+  <!-- ─── SCENE 6: FUTURE ─── -->
+  <section id="scene-future" class="scene">
+    <canvas id="constellation-canvas"></canvas>
+    <div class="future-content">
+      <p class="future-quote reveal-on-scroll">
+        "This year gave me memories."
+      </p>
+      <div class="future-divider reveal-on-scroll"></div>
+      <p class="future-sub reveal-on-scroll">
+        The years ahead will give us a lifetime.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── GRAND FINALE ─── -->
+  <section id="scene-finale" class="scene">
+    <canvas id="finale-canvas"></canvas>
+
+    <div class="finale-content">
+      <p class="finale-line" id="fl-1"></p>
+      <p class="finale-line" id="fl-2"></p>
+      <p class="finale-line" id="fl-3"></p>
+
+      <div class="finale-closing" id="finale-closing">
+        <span class="finale-closing-line1">365 days down.</span>
+        <span class="finale-closing-line2">Forever to go.</span>
+      </div>
+
+      <div class="finale-heart" id="finale-heart">
+        <svg class="heart-svg" viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 85 C50 85 5 55 5 30 C5 15 17 5 30 5 C38 5 45 10 50 17 C55 10 62 5 70 5 C83 5 95 15 95 30 C95 55 50 85 50 85Z"
+            fill="url(#heartGrad)" />
+          <defs>
+            <radialGradient id="heartGrad" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#E8708A"/>
+              <stop offset="100%" stop-color="#8B2040"/>
+            </radialGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /#main -->
+
+<script>
+/* ════════════════════════════════════════════════════════
+   ANNIVERSARY WEBSITE — JAVASCRIPT ENGINE
+   ════════════════════════════════════════════════════════ */
+
+/* ── Stars canvas (opening + finale) ── */
+function createStarField(canvas, options = {}) {
+  const {
+    count = 200,
+    speedMin = 0.02,
+    speedMax = 0.06,
+    sizeMin = 0.5,
+    sizeMax = 2.2,
+    twinkle = true,
+    color = [255, 255, 255]
+  } = options;
+
+  const ctx = canvas.getContext('2d');
+  let stars = [], animId;
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    init();
+  }
+
+  function init() {
+    stars = Array.from({ length: count }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: sizeMin + Math.random() * (sizeMax - sizeMin),
+      speed: speedMin + Math.random() * (speedMax - speedMin),
+      opacity: 0.3 + Math.random() * 0.7,
+      drift: (Math.random() - 0.5) * 0.3,
+      twinkleSpeed: 0.005 + Math.random() * 0.015,
+      twinklePhase: Math.random() * Math.PI * 2
+    }));
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.twinklePhase += s.twinkleSpeed;
+      const alpha = twinkle
+        ? s.opacity * (0.5 + 0.5 * Math.sin(s.twinklePhase))
+        : s.opacity;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${color.join(',')}, ${alpha})`;
+      ctx.fill();
+    });
+    animId = requestAnimationFrame(draw);
+  }
+
+  const ro = new ResizeObserver(resize);
+  ro.observe(canvas);
+  resize();
+  draw(0);
+
+  return { stop: () => { cancelAnimationFrame(animId); ro.disconnect(); } };
+}
+
+/* ── Floating particles (numbers canvas) ── */
+function createParticles(canvas) {
+  const ctx = canvas.getContext('2d');
+  let pts = [], animId;
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    pts = Array.from({ length: 80 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: 0.5 + Math.random() * 1.5,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: -0.1 - Math.random() * 0.2,
+      life: Math.random(),
+      maxLife: 0.6 + Math.random() * 0.4
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pts.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life += 0.002;
+      if (p.life > p.maxLife) {
+        p.x = Math.random() * canvas.width;
+        p.y = canvas.height + 10;
+        p.life = 0;
+      }
+      const t = p.life / p.maxLife;
+      const alpha = t < 0.2 ? t / 0.2 : t > 0.8 ? 1 - (t - 0.8) / 0.2 : 1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(201, 168, 76, ${alpha * 0.4})`;
+      ctx.fill();
+    });
+    animId = requestAnimationFrame(draw);
+  }
+
+  const ro = new ResizeObserver(resize);
+  ro.observe(canvas);
+  resize();
+  draw();
+  return { stop: () => { cancelAnimationFrame(animId); ro.disconnect(); } };
+}
+
+/* ── Hearts explosion ── */
+function createHeartsExplosion(canvas) {
+  const ctx = canvas.getContext('2d');
+  let hearts = [], animId, active = false;
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+
+  const ro = new ResizeObserver(resize);
+  ro.observe(canvas);
+  resize();
+
+  function heartPath(ctx, x, y, size) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size, size);
+    ctx.beginPath();
+    ctx.moveTo(0, -3);
+    ctx.bezierCurveTo(-5, -8, -10, 0, 0, 6);
+    ctx.bezierCurveTo(10, 0, 5, -8, 0, -3);
+    ctx.restore();
+  }
+
+  function explode() {
+    if (active) return;
+    active = true;
+    const colors = ['#E8708A', '#C0526A', '#F0D080', '#FFFFFF', '#FFB6C1'];
+    for (let i = 0; i < 60; i++) {
+      hearts.push({
+        x: canvas.width / 2 + (Math.random() - 0.5) * canvas.width * 0.4,
+        y: canvas.height * 0.6,
+        vx: (Math.random() - 0.5) * 6,
+        vy: -(3 + Math.random() * 6),
+        size: 0.8 + Math.random() * 1.8,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        life: 0,
+        gravity: 0.12 + Math.random() * 0.08,
+        rotation: (Math.random() - 0.5) * 0.2,
+        rot: 0
+      });
+    }
+    draw();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    hearts.forEach(h => {
+      h.life += 0.012;
+      h.x += h.vx;
+      h.y += h.vy;
+      h.vy += h.gravity;
+      h.rot += h.rotation;
+      if (h.life < 1) alive = true;
+      const alpha = h.life < 0.1 ? h.life / 0.1
+                  : h.life > 0.7 ? 1 - (h.life - 0.7) / 0.3 : 1;
+      ctx.save();
+      ctx.translate(h.x, h.y);
+      ctx.rotate(h.rot);
+      ctx.beginPath();
+      const s = h.size;
+      ctx.moveTo(0, -3 * s);
+      ctx.bezierCurveTo(-5 * s, -8 * s, -10 * s, 0, 0, 6 * s);
+      ctx.bezierCurveTo(10 * s, 0, 5 * s, -8 * s, 0, -3 * s);
+      ctx.fillStyle = h.color;
+      ctx.globalAlpha = alpha;
+      ctx.fill();
+      ctx.restore();
+    });
+
+    if (alive) {
+      animId = requestAnimationFrame(draw);
+    } else {
+      hearts = [];
+      active = false;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  return { explode, stop: () => { cancelAnimationFrame(animId); ro.disconnect(); } };
+}
+
+/* ── Constellation (future scene) ── */
+function createConstellation(canvas) {
+  const ctx = canvas.getContext('2d');
+  let pts = [], animId;
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    init();
+  }
+
+  function init() {
+    pts = Array.from({ length: 40 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: 0.5 + Math.random() * 1.5,
+      vx: (Math.random() - 0.5) * 0.12,
+      vy: (Math.random() - 0.5) * 0.12,
+      phase: Math.random() * Math.PI * 2
+    }));
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw lines between close points
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const dx = pts[i].x - pts[j].x;
+        const dy = pts[i].y - pts[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const maxDist = 160;
+        if (dist < maxDist) {
+          const alpha = (1 - dist / maxDist) * 0.25;
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(pts[j].x, pts[j].y);
+          ctx.strokeStyle = `rgba(201,168,76,${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw stars
+    pts.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.phase += 0.008;
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+      const alpha = 0.5 + 0.5 * Math.sin(p.phase);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(240,208,128,${alpha * 0.9})`;
+      ctx.fill();
+    });
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  const ro = new ResizeObserver(resize);
+  ro.observe(canvas);
+  resize();
+  draw(0);
+  return { stop: () => { cancelAnimationFrame(animId); ro.disconnect(); } };
+}
+
+/* ── Typewriter ── */
+function typewriter(el, text, speed = 28) {
+  return new Promise(resolve => {
+    let i = 0;
+    const cursor = document.createElement('span');
+    cursor.className = 'typewriter-cursor';
+    el.appendChild(cursor);
+    const iv = setInterval(() => {
+      if (i < text.length) {
+        cursor.insertAdjacentText('beforebegin', text[i++]);
+      } else {
+        clearInterval(iv);
+        setTimeout(() => { cursor.remove(); resolve(); }, 800);
+      }
+    }, speed);
+  });
+}
+
+/* ════════════════════════════════════
+   BOOT SEQUENCE
+   ════════════════════════════════════ */
+window.addEventListener('load', () => {
+  // ─── Loading ───
+  setTimeout(() => {
+    const loading = document.getElementById('loading');
+    loading.classList.add('fade-out');
+    setTimeout(() => loading.remove(), 900);
+    startOpening();
+  }, 1000);
+});
+
+function startOpening() {
+  const opening = document.getElementById('opening');
+  const canvas = document.getElementById('star-canvas');
+  createStarField(canvas, { count: 280, sizeMax: 2, color: [200, 190, 160] });
+
+  const line1 = document.getElementById('open-line1');
+  const line2 = document.getElementById('open-line2');
+  const btn = document.getElementById('begin-btn');
+
+  // Sequence
+  setTimeout(() => line1.classList.add('visible'), 600);
+  setTimeout(() => {
+    line1.classList.add('dim');
+    line2.classList.add('visible');
+  }, 3000);
+  setTimeout(() => btn.classList.add('visible'), 5000);
+
+  btn.addEventListener('click', () => {
+    opening.classList.add('hidden');
+    const main = document.getElementById('main');
+    main.classList.add('visible');
+    setTimeout(() => {
+      opening.remove();
+      initMain();
+    }, 1300);
+  });
+}
+
+function initMain() {
+  // ─── Scene 1: Numbers canvas ───
+  createParticles(document.getElementById('numbers-canvas'));
+
+  // ─── Intersection Observer for scroll animations ───
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  // Number blocks
+  ['n-365','n-12','n-52','n-8760','numbers-closing'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) io.observe(el);
+  });
+
+  // Timeline entries
+  document.querySelectorAll('.timeline-entry').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.05}s`;
+    io.observe(el);
+  });
+
+  // Reason cards
+  document.querySelectorAll('.reason-card').forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 4) * 0.08}s`;
+    io.observe(el);
+  });
+
+  // Generic reveal
+  document.querySelectorAll('.reveal-on-scroll').forEach(el => io.observe(el));
+
+  // Future scene
+  document.querySelectorAll('#scene-future .future-quote,' +
+    '#scene-future .future-divider,' +
+    '#scene-future .future-sub').forEach(el => io.observe(el));
+
+  // ─── Canvases ───
+  createConstellation(document.getElementById('constellation-canvas'));
+  createStarField(document.getElementById('finale-canvas'), {
+    count: 350,
+    sizeMax: 2.5,
+    color: [210, 200, 170]
+  });
+
+  // ─── Envelope / Letter ───
+  const envelopeWrap = document.getElementById('envelope-wrap');
+  let letterOpened = false;
+
+  envelopeWrap.addEventListener('click', () => {
+    if (letterOpened) return;
+    letterOpened = true;
+    envelopeWrap.classList.add('opened');
+    document.getElementById('env-instruction').style.opacity = '0';
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       [LETTER] — Edit the letter text below
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    const letterLines = [
+      "A year ago today — June 15th, 2025 — something began that I will be grateful for every day of my life.",
+      "Lamoora, there is so much I want to say, and so little that words actually do justice to.",
+      "What I know is this: this year, you became the best part of every single day. You are the person I want to tell things to first.",
+      "You are the reason ordinary moments feel like something worth remembering. The reason coming home feels different. The reason I smile for no reason at all.",
+      "Thank you for your patience. Thank you for your honesty. Thank you for choosing, every day, to be here with me.",
+      "I love you more than I knew was possible on June 15th last year — and I am so glad I get to keep finding out what that means."
+    ];
+
+    const bodyEl = document.getElementById('letter-body-text');
+    bodyEl.innerHTML = '';
+
+    setTimeout(async () => {
+      for (const line of letterLines) {
+        const p = document.createElement('p');
+        bodyEl.appendChild(p);
+        await typewriter(p, line, 22);
+        await new Promise(r => setTimeout(r, 200));
+      }
+    }, 1200);
+  });
+
+  // ─── Surprise ───
+  const heartsCanvas = document.getElementById('hearts-canvas');
+  const heartsSystem = createHeartsExplosion(heartsCanvas);
+  const surpriseBtn = document.getElementById('surprise-btn');
+  const surpriseMsg = document.getElementById('surprise-message');
+  let surpriseFired = false;
+
+  surpriseBtn.addEventListener('click', () => {
+    if (surpriseFired) {
+      heartsSystem.explode();
+      return;
+    }
+    surpriseFired = true;
+    heartsSystem.explode();
+    setTimeout(() => surpriseMsg.classList.add('visible'), 600);
+
+    // Subtle background shift
+    const section = document.getElementById('scene-surprise');
+    section.style.transition = 'background 2s ease';
+    section.style.background = 'radial-gradient(ellipse at center, #1A0A12 0%, #050508 70%)';
+  });
+
+  // ─── Grand Finale typewriter ───
+  const finaleLines = [
+    { el: 'fl-1', text: 'Thank you for every smile.' },
+    { el: 'fl-2', text: 'Thank you for every memory.' },
+    { el: 'fl-3', text: 'Thank you for every day.' }
+  ];
+
+  const finaleIO = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      finaleIO.disconnect();
+      runFinale();
+    }
+  }, { threshold: 0.3 });
+
+  finaleIO.observe(document.getElementById('scene-finale'));
+
+  async function runFinale() {
+    await new Promise(r => setTimeout(r, 400));
+    for (const { el, text } of finaleLines) {
+      const elem = document.getElementById(el);
+      elem.classList.add('visible');
+      await typewriter(elem, text, 40);
+      await new Promise(r => setTimeout(r, 300));
+    }
+    await new Promise(r => setTimeout(r, 600));
+    document.getElementById('finale-closing').classList.add('visible');
+    await new Promise(r => setTimeout(r, 600));
+    document.getElementById('finale-heart').classList.add('visible');
+  }
+}
+</script>
+</body>
+</html>
